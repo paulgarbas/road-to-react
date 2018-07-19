@@ -42,9 +42,11 @@ class App extends Component {
 	}
 
 	onDismiss(id) {
-		const updatedList = this.state.list.filter(item => id !== item.objectID);
+		const isNotId = item => id !== item.objectID; 
+		const updatedHits = this.state.result.hits.filter(isNotId);
 		this.setState({
-			list: updatedList
+			// result: Object.assign({}, this.state.result, {hits: updatedHits})
+			result: {...this.state.result, hits: updatedHits}
 		});
 	}
 	
@@ -55,9 +57,9 @@ class App extends Component {
 	render() {
 		const {result, searchTerm} = this.state;
 
-		if (!result) {
-			return null;
-		}
+		// if (!result) {
+		// 	return null;
+		// }
 		
 		return (
 			<div className="page">
@@ -69,12 +71,15 @@ class App extends Component {
 						Search
 					</Search>
 				</div>
+
+				{result && 
+					<Table 
+						list={result.hits}
+						pattern={searchTerm}
+						onDismiss={this.onDismiss}
+					/> 
+				}
 				
-				<Table 
-					list={result.hits}
-					pattern={searchTerm}
-					onDismiss={this.onDismiss}
-				/>
 			</div>
 		);
   	}
